@@ -1,10 +1,10 @@
 === rel-syndication for wordpress ===
-Contributors: jihaisse
-Donate link: 
+Contributors: jihaisse, cadeyrn
+Donate link:
 Tags: syndication, indieweb, indiewebcamp, POSSE
 Requires at least: 3.3
-Tested up to: 3.7.1
-Stable tag: trunk
+Tested up to: 3.9.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,10 +26,18 @@ In order to POSSE you will need another plugin, like Social (http://wordpress.or
 
 An original post should hyperlink to syndicated copies (e.g. per POSSE) with a rel value of syndication.
 
-Additionally the microformats2 class name u-syndication should also be placed on such hyperlinks from original posts (inside their h-entry markup/object) to their syndicated copies. 
+Additionally the microformats2 class name u-syndication should also be placed on such hyperlinks from original posts (inside their h-entry markup/object) to their syndicated copies.
 
 see http://indiewebcamp.com/rel-syndication
 
+== Changelog ==
+
+= 0.2 =
+*2014-05-16*
+
+* partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
+
 = Supported plugins =
 
-For now, only Social plugin is supported (http://wordpress.org/plugins/social/).
+* Social plugin is fully supported (http://wordpress.org/plugins/social/)
+* partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
