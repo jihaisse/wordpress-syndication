@@ -4,7 +4,7 @@ Donate link:
 Tags: syndication, indieweb, indiewebcamp, POSSE
 Requires at least: 3.3
 Tested up to: 3.9.1
-Stable tag: 0.2
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,7 +30,22 @@ Additionally the microformats2 class name u-syndication should also be placed on
 
 see http://indiewebcamp.com/rel-syndication
 
+= Can I disable automatic syndicated links insertion? =
+
+Add
+`define ('WORDPRESS_SYNDICATION_NOAUTO', true);` to wp-config.php
+to disable automatic link insertion and use :
+
+`<?php if ( function_exists('add_js_rel_syndication')) echo add_js_rel_syndication(''); ?>`
+to place it anywhere in your theme.
+
 == Changelog ==
+
+= 0.2.1 =
+*2014-05-23*
+
+* DeviantArt, FriendFeed & LinkedIn support for Social Networks Auto Poster {SNAP}
+* call from theme hack
 
 = 0.2 =
 *2014-05-16*
@@ -40,4 +55,4 @@ see http://indiewebcamp.com/rel-syndication
 = Supported plugins =
 
 * Social plugin is fully supported (http://wordpress.org/plugins/social/)
-* partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
+* partial ( see changelog ) support for Social Networks Auto Poster {SNAP}

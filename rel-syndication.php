@@ -6,13 +6,16 @@ Text Domain: rel-syndication
 Description:
 Author: Jean-Sébastien Mansart
 Author URI: http://jihais.se
-Version: 0.2
+Version: 0.2.1
 License: GPL2++
 Contributors: Peter Molnar
 */
 
-// function to add markup at the end of the post
-add_filter( 'the_content', 'add_js_rel_syndication', 20);
+// function to add markup at the end of the post, only if
+if ( !( defined ( 'WORDPRESS_SYNDICATION_NOAUTO' ) && WORDPRESS_SYNDICATION_NOAUTO == true  ) ) {
+	add_filter( 'the_content', 'add_js_rel_syndication', 20);
+}
+
 function add_js_rel_syndication($content) {
 	load_plugin_textdomain( 'rel-syndication', false, dirname( plugin_basename(__FILE__) ) . '/languages/' );
 	$see_on = "";
@@ -24,8 +27,8 @@ function add_js_rel_syndication($content) {
 		$see_on = getRelSyndicationFromSNAP();
 	}
 
-	if ($see_on !== ""){
-		$content = $content . '<div class="usyndication">' . __("Also on:", "rel-syndication") . $see_on . "</div>";
+	if ( !empty($see_on) ){
+		$content = $content . '<nav class="usyndication"><h6>' . __("Also on:", "rel-syndication") . '</h6>' . $see_on . "</nav>";
 	}
 	// Returns the content.
 	return $content;
@@ -89,27 +92,30 @@ function getRelSyndicationFromSNAP() {
 	global $nxs_snapAvNts;
 	global $post;
 
+	$see_on_social = "";
+	$broadcasts = null;
+
 	$snap_options = get_option('NS_SNAutoPoster');
 	$urlmap = array (
 		'AP' => array(),
 		'BG' => array(),
-		'DA' => array(),
+		// 'DA' => array(), /* DeviantArt will use postURL */
 		'DI' => array(),
 		'DL' => array(),
 		'FB' => array( 'url' => '%BASE%/posts/%pgID%' ),
-		'FF' => array(),
+		//'FF' => array(), /* FriendFeed should be using postURL */
 		'FL' => array(),
 		'FP' => array(),
 		'GP' => array(),
 		'IP' => array(),
-		'LI' => array(),
+		'LI' => array( 'url' => '%pgID%' ),
 		'LJ' => array(),
 		'PK' => array(),
 		'PN' => array(),
 		'SC' => array(),
 		'ST' => array(),
 		'SU' => array(),
-		'TR' => array( 'url'=>'%BASE%/post/%pgID%' ),
+		'TR' => array( 'url'=>'%BASE%/post/%pgID%' ), /* even if Tumblr has postURL set as well, it's buggy and missing a */
 		'TW' => array( 'url'=>'%BASE%/status/%pgID%' ),
 		'VB' => array(),
 		'VK' => array(),
@@ -117,8 +123,8 @@ function getRelSyndicationFromSNAP() {
 		'YT' => array(),
 	);
 
+	/* all SNAP entries are in separate meta entries for the post based on the service name's "code" */
 	foreach ( $nxs_snapAvNts as $key => $serv ) {
-		/* all SNAP entries are in separate meta entries for the post based on the service name's "code" */
 		$mkey = 'snap'. $serv['code'];
 		$urlkey = $serv['lcode'].'URL';
 		$okey = $serv['lcode'];
@@ -128,13 +134,12 @@ function getRelSyndicationFromSNAP() {
 				$url = false;
 
 				if ( isset ( $m['isPosted'] ) && $m['isPosted'] == 1 ) {
-					/* this should be available for some services, for example Tumblr,
-					 * but buggy and misses slashes so URL ends up invalid
-					if ( isset( $m['postURL'] ) && !empty( $m['postURL'] ) ) {
+					/* postURL entry will only be used if there's no urlmap set for the service above
+					 * this is due to either missing postURL values or buggy entries */
+					if ( isset( $m['postURL'] ) && !empty( $m['postURL'] ) && !isset( $urlmap[ $serv['code'] ] ) ) {
 						$url = $m['postURL'];
 					}
 					else {
-					*/
 						$base = (isset( $urlmap[ $serv['code'] ]['url'])) ? $urlmap[ $serv['code'] ]['url'] : false;
 
 						if ( $base != false ) {
@@ -152,9 +157,10 @@ function getRelSyndicationFromSNAP() {
 							$replace = array ( $o[ $urlkey ], $pgID );
 							$url = str_replace ( $search, $replace, $base );
 						}
-					/* } */
+					}
 
 					if ( $url != false ) {
+						/* trim all the double slashes, some sites cannot coope with them */
 						$url = preg_replace('~(^|[^:])//+~', '\\1/', $url);
 						$classname = sanitize_title ( $serv['name'], $serv['lcode'] );
 						$broadcasts[] = '<li><a class="u-syndication link-'. $classname .' icon-'. $classname .'" rel="syndication" href="'. $url .'" target="_blank">'. $serv['name'] .'</a></li>';
@@ -164,7 +170,7 @@ function getRelSyndicationFromSNAP() {
 		}
 	}
 
-	if (count($broadcasts)) {
+	if (count($broadcasts) != 0 ) {
 		$see_on_social = '<ul>'.implode("\n", $broadcasts).'</ul>';
 	}
 
