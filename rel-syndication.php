@@ -28,7 +28,7 @@ function add_js_rel_syndication($content) {
 	}
 
 	if ($see_on !== ""){
-		$content = $content . '<div class="usyndication">' . __("Also on:", "rel-syndication") . $see_on . "</div>";
+		$content = $content . '<div class="u-syndication">' . __("Also on:", "rel-syndication") . $see_on . "</div>";
 	}
 	// Returns the content.
 	return $content;
