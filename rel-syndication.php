@@ -6,9 +6,9 @@ Text Domain: rel-syndication
 Description:
 Author: Jean-Sébastien Mansart
 Author URI: http://jihais.se
-Version: 0.2
+Version: 0.3
 License: GPL2++
-Contributors: Peter Molnar
+Contributors: Peter Molnar, Ryan Barrett
 */
 
 // function to add markup at the end of the post
@@ -22,6 +22,9 @@ function add_js_rel_syndication($content) {
 	}
 	elseif ( defined ( 'NextScripts_SNAP_Version' ) ) {
 		$see_on = getRelSyndicationFromSNAP();
+	}
+	else {
+		$see_on = getRelSyndicationFromBridgyPublish();
 	}
 
 	if ($see_on !== ""){
@@ -170,4 +173,26 @@ function getRelSyndicationFromSNAP() {
 
 	return $see_on_social;
 }
+
+function getRelSyndicationFromBridgyPublish() {
+	$broadcasts = array();
+	foreach (get_post_custom_values('bridgy_publish_syndication_urls', get_the_ID()) as $key => $link) {
+		array_push($broadcasts, '<li>' . $link . '</li>');
+	}
+	return '<ul>' . implode("\n", $broadcasts) . '</ul>';
+}
+
+function store_bridgy_publish_link($response, $source, $target, $post_ID) {
+	$json = json_decode(wp_remote_retrieve_body($response));
+	if (!is_wp_error($response) && $json && $json->url &&
+		preg_match('~https?://(?:www\.)?(brid.gy|localhost:8080)/publish/(.*)~', $target, $matches)) {
+		$link = '<a href="' . $json->url . '">' . ucfirst($matches[2]) . '</a>';
+		$existing = get_post_custom_values('bridgy_publish_syndication_urls', $post_ID);
+		if (array_search($link, get_post_custom_values('bridgy_publish_syndication_urls', $post_ID)) == false) {
+			add_post_meta($post_ID, 'bridgy_publish_syndication_urls', $link);
+		}
+	}
+}
+add_action('webmention_post_send', 'store_bridgy_publish_link', 10, 4);
+
 ?>
