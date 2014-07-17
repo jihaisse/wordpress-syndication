@@ -179,7 +179,11 @@ function getRelSyndicationFromBridgyPublish() {
 	foreach (get_post_custom_values('bridgy_publish_syndication_urls', get_the_ID()) as $key => $link) {
 		array_push($broadcasts, '<li>' . $link . '</li>');
 	}
-	return '<ul>' . implode("\n", $broadcasts) . '</ul>';
+	if ($broadcasts) {
+		return '<ul>' . implode("\n", $broadcasts) . '</ul>';
+	} else {
+		return '';
+	}
 }
 
 function store_bridgy_publish_link($response, $source, $target, $post_ID) {
