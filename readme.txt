@@ -37,7 +37,9 @@ see http://indiewebcamp.com/rel-syndication
 
 * partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
 
-= Supported plugins =
+= Supported POSSE plugins and implementations =
 
 * Social plugin is fully supported (http://wordpress.org/plugins/social/)
 * partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
+* Bridgy Publish (https://www.brid.gy/about#publish). Requires the
+  wordpress-webmention plugin (https://wordpress.org/plugins/webmention/).
