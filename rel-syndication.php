@@ -176,8 +176,11 @@ function getRelSyndicationFromSNAP() {
 
 function getRelSyndicationFromBridgyPublish() {
 	$broadcasts = array();
-	foreach (get_post_custom_values('bridgy_publish_syndication_urls', get_the_ID()) as $key => $link) {
-		array_push($broadcasts, '<li>' . $link . '</li>');
+	$links = get_post_custom_values('bridgy_publish_syndication_urls', get_the_ID());
+	if ($links) {
+		foreach ($links as $key => $link) {
+			array_push($broadcasts, '<li>' . $link . '</li>');
+		}
 	}
 	if ($broadcasts) {
 		return '<ul>' . implode("\n", $broadcasts) . '</ul>';
