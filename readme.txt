@@ -43,3 +43,6 @@ see http://indiewebcamp.com/rel-syndication
 * partial ( Facebook, Twitter & Tumblr only ) support for Social Networks Auto Poster {SNAP}
 * Bridgy Publish (https://www.brid.gy/about#publish). Requires the
   wordpress-webmention plugin (https://wordpress.org/plugins/webmention/).
+
+== Additional/Alternate IndieWeb Plugins ==
+For those interested in the IndieWeb for WordPress (http://indiewebcamp.com/wordpress), be sure to check out the IndieWeb plugin (https://wordpress.org/plugins/indieweb/) which includes several affiliated plugins including a plugin similar to rel-syndication (and is in fact based on parts of the code here) called Syndication Links (https://wordpress.org/plugins/syndication-links/). Be aware that using rel-syndication in conjunction with syndication-links will cause duplicated link output in your content.
